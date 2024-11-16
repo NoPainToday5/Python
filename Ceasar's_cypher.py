@@ -1,7 +1,6 @@
-def cipher(file, num):
-    with open(file, "r") as file:
-        text = file.read()
+import os
 
+def cipher(text, num):
     ciphertext = ""
 
     for i in text:
@@ -16,9 +15,7 @@ def cipher(file, num):
     
     return ciphertext
 
-
-def decypher(text, num, file, opt):
-
+def decypher(text, num):
     decrypted_txt = ""
 
     for i in text:
@@ -31,18 +28,86 @@ def decypher(text, num, file, opt):
             if(i.islower()):
                 decrypted_txt += chr((ord(i) - num - 97) % 26 + 97)
     
-    with open(file, opt) as file:
-        if(opt == "w"):
-            file.write(decrypted_txt)
-        if(opt == "a"):
-            file.write(decrypted_txt)
-    
     return decrypted_txt
 
-file_name = "./Files/cypher.txt"
+def filewriting(message):
+    decision = input("Write or append a file? ")
+    file_name = input("Input a file name with a path: ")
 
-encrypted = cipher(file_name, 23)
-print(encrypted)
+    if(decision == "write"):
+        with open(file_name, "w") as file:
+            file.write(message)
+        file.close()
+        print("Your new message: " + message)
+            
+    if(decision == "append"):
+        with open(file_name, "a") as file:
+            file.write("\n" + message)
+        file.close()
+        print("Your new message: " + message)
+    
+    return
 
-decrypted = decypher(encrypted, 23, file_name, "w")
-print(decrypted)
+
+ft = input("A file or a text? ").lower()
+decision = input("Encrypt or decrypt? ").lower()
+shift = int(input("By how many letters? "))
+
+if(ft == "file"):
+    while True:
+        file_name = input("Input a file name with a path: ")
+        if(os.path.isfile(file_name)):
+            with open(file_name, "r") as file:
+                text = file.read()
+            file.close()
+            break
+        else:
+            print("The file does not exist. Enter a valid file.")
+
+    if (decision == "encrypt"):
+        encrypted = cipher(text, shift)
+        ft = input("Write it to a file? ").lower()
+
+        if(ft == "yes"):
+            filewriting(encrypted)
+        
+        if(ft == "no"):
+            print("Your new message: " + encrypted)
+
+        
+
+    if (decision == "decrypt"):
+        decrypted = decypher(text, shift)
+        ft = input("Write it to a file? ").lower()
+
+        if(ft == "yes"):
+            filewriting(decrypted)
+        
+        if(ft == "no"):
+            print("Your new message: " + decrypted)
+    
+    
+    
+
+if(ft == "text"):
+    text = input("Input text: ")
+
+    if (decision == "encrypt"):
+        encrypted = cipher(text, shift)
+        ft = input("Write it to a file? ").lower()
+
+        if(ft == "yes"):
+            filewriting(encrypted)
+        
+        if(ft == "no"):
+            print("Your new message: " + encrypted)
+
+    if (decision == "decrypt"):
+        decrypted = decypher(text, shift)
+        ft = input("Write it to a file? ").lower()
+
+        if(ft == "yes"):
+            filewriting(decrypted)
+        
+        if(ft == "no"):
+            print("Your new message: " + decrypted)
